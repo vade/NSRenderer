@@ -29,7 +29,7 @@
 		1B5F0BFF0FE01531008F97AE /* PlayerApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerApplication.h; path = NSRenderer/PlayerApplication.h; sourceTree = "<group>"; };
 		1B5F0C000FE01531008F97AE /* PlayerApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerApplication.m; path = NSRenderer/PlayerApplication.m; sourceTree = "<group>"; };
 		1B5F0C960FE01A7D008F97AE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
-		1B7C39AF0FE159F4000A8A32 /* QCAdvancedPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QCAdvancedPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B7C39AF0FE159F4000A8A32 /* NSRenderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NSRenderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B7C39B10FE159F5000A8A32 /* QCAdvancedPlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "QCAdvancedPlayer-Info.plist"; path = "NSRenderer/QCAdvancedPlayer-Info.plist"; sourceTree = "<group>"; };
 		1B7C3A9B0FE1995B000A8A32 /* vade icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "vade icon.png"; path = "NSRenderer/vade icon.png"; sourceTree = "<group>"; };
 		1B7C3AB00FE1A587000A8A32 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -63,7 +63,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1B7C39AF0FE159F4000A8A32 /* QCAdvancedPlayer.app */,
+				1B7C39AF0FE159F4000A8A32 /* NSRenderer.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -146,7 +146,7 @@
 			);
 			name = NSRenderer;
 			productName = QCAdvancedPlayer;
-			productReference = 1B7C39AF0FE159F4000A8A32 /* QCAdvancedPlayer.app */;
+			productReference = 1B7C39AF0FE159F4000A8A32 /* NSRenderer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -237,7 +237,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = QCAdvancedPlayer;
+				PRODUCT_NAME = NSRenderer;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -264,7 +264,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = QCAdvancedPlayer;
+				PRODUCT_NAME = NSRenderer;
 				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};

@@ -283,16 +283,16 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
 
 - (void) updateRenderView:(NSNotification *) notification
 {
-	CGLContextObj cgl_ctx = [_openGLContext CGLContextObj];
+	CGLContextObj cgl_ctx = [self.openGLContext CGLContextObj];
 	CGLLockContext(cgl_ctx);
-	[_openGLContext update];
+	[self.openGLContext update];
 	
 	NSRect mainRenderViewFrame = [self.openGLView frame];
 	
 	glViewport(0, 0, mainRenderViewFrame.size.width, mainRenderViewFrame.size.height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	[_openGLContext flushBuffer];
+	[self.openGLContext flushBuffer];
 	CGLUnlockContext(cgl_ctx);
 	
 	self.screenSize = self.openGLView.frame.size;
@@ -300,72 +300,39 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
 	
 -(IBAction) changeDisplayChoice:(id)sender
 {
-	BOOL wasRunningOnEntry = CVDisplayLinkIsRunning(displayLink);
+    BOOL wasRunningOnEntry = CVDisplayLinkIsRunning(displayLink);
+	while(CVDisplayLinkIsRunning(displayLink))
+    {
+        CVDisplayLinkStop(displayLink);
+    }
 	
-	if(wasRunningOnEntry)
-		CVDisplayLinkStop(displayLink);
-	
-	CGLContextObj cgl_ctx = [_openGLContext CGLContextObj]; 
-	CGLLockContext(cgl_ctx);
-	
-	switch ([sender selectedColumn])
-	{
-            
-		// FullScreen
-		case 0:
-        {
-			NSLog(@"Fullscreen selected");
-			
-			[self.fullscreenPopup setEnabled:NO];
-			
-			NSMutableDictionary * fullscreenDictionary = [NSMutableDictionary dictionary];
-			[fullscreenDictionary setObject:[NSNumber numberWithBool:0] forKey:NSFullScreenModeAllScreens];	
-			[fullscreenDictionary setObject:[NSNumber numberWithInt:NSNormalWindowLevel] forKey:NSFullScreenModeWindowLevel];	
+    if([self.openGLView isInFullScreenMode])
+    {
+        [NSCursor unhide];
 
-			[self.renderWindow orderOut:self];
-			
-			NSInteger screenChoice = [self.fullscreenPopup indexOfSelectedItem];
-			if (screenChoice >= [[NSScreen screens] count])
-			{
-				NSLog(@"Unable to use screenChoice");
-				screenChoice = 0;
-			}
-			NSScreen* renderScreen = [[NSScreen screens] objectAtIndex:screenChoice];
-			
-			[self.openGLView enterFullScreenMode:renderScreen withOptions:fullscreenDictionary];
-			
-			break;
-        }
-		case 1:
-        {
-			NSLog(@"Fixed Window selected");
-			break;
-        }
-		case 2:
-        {
-			NSLog(@"Free Window selected");
-			
-			if([self.openGLView isInFullScreenMode])
-			{
-				[self.fullscreenPopup setEnabled:YES];
-				[self.renderWindow orderFront:self];
-				[self.openGLView exitFullScreenModeWithOptions:nil];
-			}
-			
-			break;
-        }
-		default:
-        {
-			NSLog(@"changeDisplayChoice: Unrecognised option");
-			break;
-        }
-	}
-	
-	[self.openGLContext update];
-	
-	glViewport(0, 0, [self.openGLView frame].size.width, [self.openGLView frame].size.height);		// resize GL viewport to match our new frame
-	[self.openGLContext flushBuffer];
-	CGLUnlockContext(cgl_ctx);
+        [self.fullscreenPopup setEnabled:YES];
+        [self.openGLView exitFullScreenModeWithOptions:nil];
+//        [self.renderWindow orderFront:self];
+    }
+    else
+    {
+        
+        NSLog(@"Fullscreen selected");
+        
+        NSMutableDictionary * fullscreenDictionary = [NSMutableDictionary dictionary];
+        [fullscreenDictionary setObject:[NSNumber numberWithBool:0] forKey:NSFullScreenModeAllScreens];
+        [fullscreenDictionary setObject:[NSNumber numberWithInt:NSNormalWindowLevel] forKey:NSFullScreenModeWindowLevel];
+
+        [self.openGLView enterFullScreenMode:[self.renderWindow screen] withOptions:nil];
+        
+        
+        [NSCursor hide];
+//        [self.renderWindow orderOut:self];
+    }
+		
+    [self updateRenderView:nil];
+
+//    CGLUnlockContext(cgl_ctx);
 	
 	if(wasRunningOnEntry)
 		CVDisplayLinkStart(displayLink);
