@@ -175,10 +175,16 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
         
         NSString* modelPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Models"];
         
-        NSDirectoryEnumerator* modelEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:modelPath];
+        NSDirectoryEnumerator* modelEnumerator = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL fileURLWithPath:modelPath] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL *url, NSError *error) {
+            
+            return YES;
+            
+        }];
         
-        for (NSString* aModelPath in modelEnumerator)
+        for (NSURL* aModelURL in modelEnumerator)
         {
+            NSString* aModelPath = [aModelURL path];
+            
             QCRenderer* aModelRenderer = [[QCRenderer alloc] initWithOpenGLContext:self.openGLContext pixelFormat:self.openGLContext.pixelFormat file:modelFilePath];
 
             if(aModelRenderer == nil)
@@ -187,7 +193,7 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
                 [NSApp terminate:nil];
             }
 
-            [aModelRenderer setValue:[modelPath stringByAppendingPathComponent:aModelPath ] forInputKey:@"modelPath"];
+            [aModelRenderer setValue:aModelPath forInputKey:@"modelPath"];
             
             // preload the fuckers
             if(![aModelRenderer renderAtTime:0 arguments:nil])
@@ -196,7 +202,7 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
             }
             [self.modelRenderers addObject:aModelRenderer];
             
-            NSLog(@"Model Path %@", modelPath);
+            NSLog(@"Model Path %@", aModelPath);
         }
     }
     
@@ -235,6 +241,8 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
     if(activeModel.floatValue > 0.0 )
     {
         NSInteger modelIndex = (floor([activeModel integerValue]));
+        
+        modelIndex = modelIndex % self.modelRenderers.count;
         
         if(![self.modelRenderers[modelIndex] renderAtTime:time arguments:arguments])
         {
