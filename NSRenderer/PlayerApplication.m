@@ -74,6 +74,8 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *i
 
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification 
 {
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+
     self.modelRenderers = [[NSMutableArray alloc] init];
     
 	[self.paramView setDrawsBackground:NO];
